@@ -6,6 +6,7 @@ import * as firestoreAdmin from 'firebase-admin';
 import { deployCommands } from './deploy-commands';
 import { CommandDerived } from './utilities/command';
 import { setRandomActivity } from './utilities/set-random-activity';
+import { setRandomVoiceChannelNames } from './utilities/set-random-voice-channel-names';
 import {
   processReactionEvent,
   processMessageEvent,
@@ -73,6 +74,13 @@ client.on('ready', () => {
     setRandomActivity(client);
   });
   activityCronJob.start();
+
+  // setup voice channel names
+  setRandomVoiceChannelNames(client);
+  const voiceChannelNamesCronJob = new CronJob('* * * * *', () => {
+    setRandomVoiceChannelNames(client);
+  });
+  voiceChannelNamesCronJob.start();
 });
 
 // listen for discord.js command
